@@ -1064,39 +1064,37 @@ public:
 #pragma mark -
 
 	void ParseMessage(CNick& Nick, CString& sMessage, CChan *pChannel = NULL, CString sIntent = "") {
-		if (m_pNetwork->IsUserOnline() == false) {
 #if defined VERSION_MAJOR && defined VERSION_MINOR && VERSION_MAJOR >= 1 && VERSION_MINOR >= 2
-			CString sCleanMessage = sMessage.StripControls_n();
+		CString sCleanMessage = sMessage.StripControls_n();
 #else
-			CString &sCleanMessage = sMessage;
+		CString &sCleanMessage = sMessage;
 #endif
 
-			for (std::vector<CDevice*>::const_iterator it = m_vDevices.begin();
-					it != m_vDevices.end(); ++it)
-			{
-				CDevice& device = **it;
+		for (std::vector<CDevice*>::const_iterator it = m_vDevices.begin();
+				it != m_vDevices.end(); ++it)
+		{
+			CDevice& device = **it;
 
-				if (device.IsNetworkConnected(*m_pNetwork)) {
-					continue;
+			if (device.IsNetworkConnected(*m_pNetwork)) {
+				continue;
+			}
+
+			if (device.HasNetwork(*m_pNetwork)) {
+				bool bMention = (
+					((pChannel == NULL) || device.HasMentionChannel(pChannel->GetName())) ||
+					device.HasMentionNick(Nick.GetNick()) ||
+					device.IncludesMentionKeyword(sCleanMessage, m_pNetwork->GetIRCNick().GetNick()));
+
+				if (bMention && (
+						(pChannel && device.HasIgnoreChannel(pChannel->GetName())) ||
+						device.HasIgnoreNick(Nick.GetNick()) ||
+						device.IncludesIgnoreKeyword(sCleanMessage)))
+				{
+					bMention = false;
 				}
 
-				if (device.HasNetwork(*m_pNetwork)) {
-					bool bMention = (
-						((pChannel == NULL) || device.HasMentionChannel(pChannel->GetName())) ||
-						device.HasMentionNick(Nick.GetNick()) ||
-						device.IncludesMentionKeyword(sCleanMessage, m_pNetwork->GetIRCNick().GetNick()));
-
-					if (bMention && (
-							(pChannel && device.HasIgnoreChannel(pChannel->GetName())) ||
-							device.HasIgnoreNick(Nick.GetNick()) ||
-							device.IncludesIgnoreKeyword(sCleanMessage)))
-					{
-						bMention = false;
-					}
-
-					if (bMention) {
-						device.SendNotification(*this, Nick.GetNick(), sCleanMessage, pChannel, sIntent);
-					}
+				if (bMention) {
+					device.SendNotification(*this, Nick.GetNick(), sCleanMessage, pChannel, sIntent);
 				}
 			}
 		}
