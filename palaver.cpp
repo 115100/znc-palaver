@@ -1086,7 +1086,7 @@ public:
 					device.IncludesMentionKeyword(sCleanMessage, m_pNetwork->GetIRCNick().GetNick()));
 
 				if (bMention && (
-						(pChannel && device.HasIgnoreChannel(pChannel->GetName())) ||
+						(pChannel && (device.HasIgnoreChannel(pChannel->GetName()) || pChannel->IsDetached())) ||
 						device.HasIgnoreNick(Nick.GetNick()) ||
 						device.IncludesIgnoreKeyword(sCleanMessage)))
 				{
