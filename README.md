@@ -1,9 +1,6 @@
----
-Latest Version: 1.1.2
----
-
 # Palaver ZNC Module
 
+![Latest version](https://img.shields.io/github/tag/cocodelabs/znc-palaver.svg)
 [![Build Status](https://img.shields.io/circleci/project/cocodelabs/znc-palaver/master.svg)](https://circleci.com/gh/cocodelabs/znc-palaver)
 
 Palaver ZNC module provides push notifications to Palaver while Palaver is
@@ -28,19 +25,19 @@ notifications on your phone at the same time.
 
 ### Download the module
 
-#### Via Git (recommended)
+#### Via wget (recommended)
+
+```bash
+$ wget https://github.com/cocodelabs/znc-palaver/archive/master.tar.gz
+$ tar -xzf master.tar.gz
+$ cd znc-palaver-master
+```
+
+#### Via Git
 
 ```bash
 $ git clone https://github.com/Palaver/znc-palaver
 $ cd znc-palaver
-```
-
-#### Via wget
-
-```bash
-$ wget https://github.com/Palaver/znc-palaver/archive/master.zip
-$ unzip master.zip
-$ cd znc-palaver-master
 ```
 
 ### Compiling
